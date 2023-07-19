@@ -1,0 +1,126 @@
+*** : Redux is a state management library commonly used with React to manage the state of an application in a predictable and centralized manner.
+
+1. Create a folder structure : 
+src
+├── actions
+│   └── actions.js
+├── api
+│   └── api.js
+├── components
+│   └── MyComponent.js
+├── reducers
+│   └── reducer.js
+├── sagas
+│   └── saga.js
+├── store
+│   └── store.js
+└── index.js
+
+2. actions.js
+
+*** : A set of JavaScript constants and functions that define actions and action creators for fetching data asynchronously in a Redux application. 
+
+1.Declare Constants that requires for the actions to be called.
+Constants Example : 
+*** : export const FETCH_DATA_REQUEST = "FETCH_DATA_REQUEST";
+*** : Description: Represents the action type dispatched when a data fetching request is initiated.
+*** : Usage: This constant is used to identify and handle the action in Redux reducers and middleware.
+
+*** : export const FETCH_DATA_SUCCESS = "FETCH_DATA_SUCCESS";
+*** : Description: Represents the action type dispatched when data fetching is successful.
+*** : Usage: This constant is used to identify and handle the action in Redux reducers and middleware.
+			
+*** : export const FETCH_DATA_ERROR = "FETCH_DATA_ERROR";
+*** : Description: Represents the action type dispatched when an error occurs during data fetching.
+*** : Usage: This constant is used to identify and handle the action in Redux reducers and middleware.
+
+*** : This constant defines the action type for the "data fetching request" action. 
+*** : It indicates that the data fetching process has started.
+		
+		
+2. Create a Action Creators
+Action Creators: 
+
+*** : 	export const fetchDataRequest = () => ({
+		type: FETCH_DATA_REQUEST,
+		});
+*** : Description: Action creator function that generates an action object to signify the initiation of a data fetching request.
+*** : Return value: An action object with the type FETCH_DATA_REQUEST.
+*** : Usage: This action creator is typically dispatched when the application intends to start fetching data from an external source (e.g., an API call).
+
+
+*** : 	export const fetchDataSuccess = (data) => ({
+		type: FETCH_DATA_SUCCESS,
+		payload: data,
+		});
+*** : Description: Action creator function that generates an action object to indicate successful data fetching.
+*** : Parameters:
+*** : data (any): The data fetched successfully from the external source.
+*** : Return value: An action object with the type FETCH_DATA_SUCCESS and a payload property containing the fetched data.
+*** : Usage: This action creator is dispatched upon successful retrieval of data from the external source. 
+	  The fetched data is included in the action payload to be processed by Redux reducers.
+	
+	
+*** : 	export const fetchDataError = (error) => ({
+		type: FETCH_DATA_ERROR,
+		payload: error,
+		});
+*** : Description: Action creator function that generates an action object to handle errors that occur during data fetching.
+*** : Parameters:
+*** : error (string or object): The error encountered during the data fetching process.
+*** : Return value: An action object with the type FETCH_DATA_ERROR and a payload property containing the error information.
+*** : Usage: This action creator is dispatched when an error occurs during the data fetching process. 
+	  The error details are included in the action payload for proper error handling in Redux reducers and middleware.
+
+
+*** : fetchDataRequest: This is an action creator function that returns an action object with the type FETCH_DATA_REQUEST. This action is dispatched when the data 		fetching process is initiated.
+
+3.Saga Overview:
+
+
+*** : This Redux Saga consists of three main parts: the fetchData saga, the watchFetchData saga, and the rootSaga. 
+	  These sagas work together to handle the data fetching process in a Redux application.
+	  
+	  
+4.Store.js
+	import { createStore, applyMiddleware } from "redux";
+	import createSagaMiddleware from "redux-saga";
+	import rootReducer from "../reducers/reducer";
+	import rootSaga from "../saga/saga";
+	
+	const sagaMiddleware = createSagaMiddleware();
+	const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
+	sagaMiddleware.run(rootSaga);
+	export default store;
+
+*** : Create Saga Middleware:
+*** : The createSagaMiddleware function is used to create a new instance of the Redux Saga middleware.
+*** : const sagaMiddleware = createSagaMiddleware();
+
+*** : Create the Redux Store:
+*** : The createStore function from Redux is used to create the Redux store. 
+		It takes two main arguments: the root reducer and any middleware to be applied.
+*** : const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
+
+*** : Apply Saga Middleware:
+*** : The previously created sagaMiddleware is applied to the store using applyMiddleware. 
+		This enables Redux Saga to intercept dispatched actions and handle asynchronous operations using sagas.
+*** : applyMiddleware(sagaMiddleware)
+
+*** : Run the Root Saga:
+*** : The root saga, rootSaga, is executed using the run method of the saga middleware. 
+		This makes the sagas defined in the rootSaga active and ready to listen for dispatched actions.
+*** : sagaMiddleware.run(rootSaga);
+
+*** : Export the Store:
+
+*** : Usage:
+*** : To use this Redux store in your application, you need to import it into your main application file (e.g., index.js or App.js):
+
+*** : The Provider component is used to make the Redux store available to all the components in the application through React's context. 
+*** : By wrapping the root component (in this case, App) with Provider, you allow components to access the Redux store using the useSelector and useDispatch hooks, 
+		as 	shown in the previous examples.
+
+*** : With this setup, your Redux store is now configured to use Redux Saga middleware, 
+		and you can use Redux actions and sagas to handle asynchronous operations like data fetching, 	
+		API calls, and more, in a more organized and predictable manner.
